@@ -20,4 +20,15 @@ db.exec(`
   );  
 `);
 
+// prepare queries 
+export const insertUser = db.prepare(`
+  INSERT INTO users(username, password)
+  VALUES(?, ?);
+`);
+
+export const insertTodo = db.prepare(`
+  INSERT INTO todos(user_id, task)
+  VALUES(?, ?);
+`);
+
 export default db;

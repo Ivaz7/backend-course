@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import db from '../lib/db';
+import db, { insertTodo, insertUser } from '../lib/db';
 
 const router = express.Router();
 
@@ -12,20 +12,13 @@ router.post('/register', (req: Request, res: Response) => {
   // encrypt password
   const hashedPassword = bcrypt.hashSync(password, 8);
 
-  // insert a new user to the database
   try {
-    const insertUser = db.prepare(`
-      INSERT INTO users(username, password)
-      VALUES(?, ?);
-    `);
+    // insert a new user to the database
     const result = insertUser.run(username, hashedPassword);
 
     // default todo
+    // insert todo
     const defaultTodo = `Hello :) Add your first todo`;
-    const insertTodo = db.prepare(`
-      INSERT INTO todos(user_id, task)
-      VALUES(?, ?);  
-    `)
     insertTodo.run(result.lastInsertRowid, defaultTodo);
 
     // token jwt
