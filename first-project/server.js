@@ -4,7 +4,7 @@ const PORT = 8383;
 
 app.get('/', (req, res) => {
   console.log("I hit a endpoint", req.method);
-  res.sendStatus(201);
+  res.send('<h1>Hello H1 Element</h1>');
 });
 
 app.get('/dashboard', (req, res) => {
