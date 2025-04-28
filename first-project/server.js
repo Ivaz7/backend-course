@@ -9,9 +9,21 @@ let data = [
   },
 ]
 
+// middleware
+app.use(express.json())
+
 app.get('/', (req, res) => {
-  console.log("I hit a endpoint", req.method);
-  res.send('<h1>Hello H1 Element</h1>');
+  console.log("home", req.method);
+  res.send(`
+    <body>
+      <h1>
+        DATA:
+      </h1>
+      <p> 
+        ${JSON.stringify(data)}
+      </p>  
+    </body>
+    `);
 });
 
 app.get('/dashboard', (req, res) => {
@@ -22,8 +34,16 @@ app.get('/dashboard', (req, res) => {
 // api endpoint
 
 app.get('/api/data', (req, res) => {
-  console.log('This data', req.method);
+  console.log('This data api endpoint', req.method);
   res.send(data)
+});
+
+app.post('/api/data', (req, res) => {
+  // create data user sign up
+  const newData = req.body;
+  console.log(newData)
+  data.push(newData)
+  res.sendStatus(201);
 });
 
 app.listen(PORT, () => {
