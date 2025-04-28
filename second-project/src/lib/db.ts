@@ -31,4 +31,8 @@ export const insertTodo = db.prepare(`
   VALUES(?, ?);
 `);
 
+export const getUser = db.prepare(`
+  SELECT * FROM users WHERE username = ?  
+`)
+
 export default db;

@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import db, { insertTodo, insertUser } from '../lib/db';
+import { getUser, insertTodo, insertUser } from '../lib/db';
 
 const router = express.Router();
 
@@ -26,19 +26,49 @@ router.post('/register', (req: Request, res: Response) => {
 
     //  create token a new user
     const token = jwt.sign({ id: result.lastInsertRowid }, jwtKey, { expiresIn: '24h' });
+    res.json({ token });
+    return;
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(503);
+  }
+});
+
+// login (/auth/login)
+router.post('/login', (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  
+  try {
+    // get user
+    const user = getUser.get(username);
+
+    // if the user was not found
+    if (!user) { 
+      res.status(404).send('User not found');
+      return;
+    };
+
+    // get password
+    const passwordUser = user.password;
+
+    // sync compare encrypt the password
+    const passwordIsValid = bcrypt.compareSync(password, String(passwordUser));
+
+    // if password does not match
+    if (!passwordIsValid) {
+      res.status(401).send("Your password is incorrect");
+      return;
+    }
+    
+    // token jwt
+    const jwtKey = process.env.JWT_KEY!;
+
+    const token = jwt.sign({ id: user.id }, jwtKey, { expiresIn: '24h' });
     res.json({ token })
   } catch (err) {
     console.log(err);
     res.sendStatus(503);
   }
-
-  console.log(username, hashedPassword);
-  res.sendStatus(201);
-});
-
-// login (/auth/login)
-router.post('/login', (req: Request, res: Response) => {
-  
 });
 
 export default router;
