@@ -1,18 +1,19 @@
-const express = require('express');
+import express, { Request, Response } from 'express'
+
 const app = express();
 const PORT = 8383;
 
-let data = [
+let data: { name: string; age: number }[] = [
   {
     name: 'John',
     age: 23,
   },
-]
+];
 
 // middleware
 app.use(express.json())
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   console.log("home", req.method);
   res.send(`
     <body>
@@ -30,7 +31,7 @@ app.get('/', (req, res) => {
     `);
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', (req:Request, res: Response) => {
   console.log("dashboard endpoint", req.method);
   res.send(`
     <body>
@@ -46,12 +47,12 @@ app.get('/dashboard', (req, res) => {
 
 // api endpoint
 
-app.get('/api/data', (req, res) => {
+app.get('/api/data', (req:Request, res:Response) => {
   console.log('This data api endpoint', req.method);
   res.send(data)
 });
 
-app.post('/api/data', (req, res) => {
+app.post('/api/data', (req:Request, res:Response) => {
   // create data user sign up
   const newData = req.body;
   console.log(newData)
@@ -60,7 +61,7 @@ app.post('/api/data', (req, res) => {
 });
 
 // delete data
-app.delete('/api/data', (req, res) => {
+app.delete('/api/data', (req:Request, res:Response) => {
   data.pop()
   console.log("We Success Delete")
   res.sendStatus(203)
