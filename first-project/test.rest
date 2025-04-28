@@ -15,3 +15,6 @@ Content-Type: application/json
   "name": "Mark",
   "age": 37
 }
+
+### DELETE END POINT
+DELETE http://localhost:8383/api/data
