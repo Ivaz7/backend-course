@@ -22,13 +22,26 @@ app.get('/', (req, res) => {
       <p> 
         ${JSON.stringify(data)}
       </p>  
+      <a href="/dashboard">
+        Home
+      </a>
     </body>
+    <script>console.log("Hello Script")</script>
     `);
 });
 
 app.get('/dashboard', (req, res) => {
   console.log("dashboard endpoint", req.method);
-  res.send("Hello Word")
+  res.send(`
+    <body>
+      <h1>
+        dashboard
+      </h1>
+      <a href="/">
+        Home
+      </a>
+    </body>
+    `);
 });
 
 // api endpoint
