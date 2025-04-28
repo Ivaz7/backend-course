@@ -9,6 +9,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// use json file
+app.use(express.json());
+
 // config for telling where the public
 app.use(express.static(path.join(__dirname, '../public')));
 

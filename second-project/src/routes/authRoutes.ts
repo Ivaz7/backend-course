@@ -5,12 +5,45 @@ import db from '../lib/db';
 
 const router = express.Router();
 
-// register
+// register a new user (/auth/register)
 router.post('/register', (req: Request, res: Response) => {
+  const { username, password } = req.body;
 
+  // encrypt password
+  const hashedPassword = bcrypt.hashSync(password, 8);
+
+  // insert a new user to the database
+  try {
+    const insertUser = db.prepare(`
+      INSERT INTO users(username, password)
+      VALUES(?, ?);
+    `);
+    const result = insertUser.run(username, hashedPassword);
+
+    // default todo
+    const defaultTodo = `Hello :) Add your first todo`;
+    const insertTodo = db.prepare(`
+      INSERT INTO todos(user_id, task)
+      VALUES(?, ?);  
+    `)
+    insertTodo.run(result.lastInsertRowid, defaultTodo);
+
+    // token jwt
+    const jwtKey = process.env.JWT_KEY!;
+
+    //  create token a new user
+    const token = jwt.sign({ id: result.lastInsertRowid }, jwtKey, { expiresIn: '24h' });
+    res.json({ token })
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(503);
+  }
+
+  console.log(username, hashedPassword);
+  res.sendStatus(201);
 });
 
-// login
+// login (/auth/login)
 router.post('/login', (req: Request, res: Response) => {
   
 });
