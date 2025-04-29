@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import authRouters from './routes/authRoutes';
 import todoRouters from './routes/todoRoutes';
+import authMiddleware from './middleware/authMiddleware';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // routes
 app.use('/auth', authRouters);
-app.use('/todos', todoRouters);
+app.use('/todos', authMiddleware, todoRouters);
 
 app.listen(PORT, () => {
   console.log(`Server is running in: ${PORT}`)

@@ -20,7 +20,7 @@ db.exec(`
   );  
 `);
 
-// prepare queries 
+// authentication queries 
 export const insertUser = db.prepare(`
   INSERT INTO users(username, password)
   VALUES(?, ?);
@@ -33,6 +33,11 @@ export const insertTodo = db.prepare(`
 
 export const getUser = db.prepare(`
   SELECT * FROM users WHERE username = ?  
+`)
+
+// todos queries
+export const getTodos = db.prepare(`
+   SELECT * FROM todos WHERE user_id = ? 
 `)
 
 export default db;
