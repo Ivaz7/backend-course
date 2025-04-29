@@ -1,48 +1,60 @@
 import express, { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { 
-  deleteTodo,
-  getTodos,
-  insertTodo,
-  updatedTodo,
-} from '../lib/db';
+import prisma from '../prismaClient';
 
 const router = express.Router();
 
 // get all todo
-router.get('/', (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   const userId = req.userId!;
-  const todos = getTodos.all(userId);
+  const todos = await prisma.todo.findMany({
+    where: {
+      userId,
+    }
+  })
   res.json(todos);
 });
 
 // create todo
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   const { task } = req.body;
   const userId = req.userId!;
-  const result = insertTodo.run(userId, task);
-  res.json({
-    id: result.lastInsertRowid,
-    task,
-    completed: 0
+  const result = await prisma.todo.create({
+    data: {
+      task,
+      userId
+    }
   })
+  res.json(result)
 });
 
 // update todo
-router.put('/:id', (req: Request, res: Response) => {
+router.put('/:id', async (req: Request, res: Response) => {
+  const userId = req.userId!;
   const { completed } = req.body;
   const { id } = req.params;
-  const result = updatedTodo.run(completed, id);
-  res.json({ message: "Todo Completed" })
+  const result = await prisma.todo.update({
+    where: {
+      id: parseInt(id),
+      userId,
+    }, 
+    data: {
+      completed: !!completed
+    }
+  })
+  res.json(result)
 });
 
 // delete todo
-router.delete('/:id', (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = req.userId!;
-  const result = deleteTodo.run(id, userId);
-  res.send("Todo Deleted")
+  const result = await prisma.todo.delete({
+    where: {
+      id: parseInt(id),
+      userId,
+    }
+  })
+  res.json(result)
 })
 
 export default router;

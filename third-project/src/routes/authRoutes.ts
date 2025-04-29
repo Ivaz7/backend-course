@@ -1,12 +1,12 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getUser, insertTodo, insertUser } from '../lib/db';
+import prisma from '../prismaClient';
 
 const router = express.Router();
 
 // register a new user (/auth/register)
-router.post('/register', (req: Request, res: Response) => {
+router.post('/register', async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   // encrypt password
@@ -14,18 +14,28 @@ router.post('/register', (req: Request, res: Response) => {
 
   try {
     // insert a new user to the database
-    const result = insertUser.run(username, hashedPassword);
+    const result = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      }
+    })
 
     // default todo
     // insert todo
     const defaultTodo = `Hello :) Add your first todo`;
-    insertTodo.run(result.lastInsertRowid, defaultTodo);
+    await prisma.todo.create({
+      data: {
+        task: defaultTodo,
+        userId: result.id
+      }
+    })
 
     // token jwt
     const jwtKey = process.env.JWT_KEY!;
 
     //  create token a new user
-    const token = jwt.sign({ id: result.lastInsertRowid }, jwtKey, { expiresIn: '24h' });
+    const token = jwt.sign({ id: result.id }, jwtKey, { expiresIn: '24h' });
     res.json({ token });
     return;
   } catch (err) {
@@ -35,12 +45,16 @@ router.post('/register', (req: Request, res: Response) => {
 });
 
 // login (/auth/login)
-router.post('/login', (req: Request, res: Response) => {
+router.post('/login', async (req: Request, res: Response) => {
   const { username, password } = req.body;
   
   try {
     // get user
-    const user = getUser.get(username);
+    const user = await prisma.user.findUnique({
+      where: {
+        username
+      }
+    })
 
     // if the user was not found
     if (!user) { 
