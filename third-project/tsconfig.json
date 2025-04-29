@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/lib/types"]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "files": [
+    "./src/lib/types.d.ts"
+  ]
+}
