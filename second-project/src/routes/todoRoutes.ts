@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { 
   getTodos,
+  insertTodo,
 } from '../lib/db';
 
 const router = express.Router();
@@ -16,7 +17,14 @@ router.get('/', (req: Request, res: Response) => {
 
 // create todo
 router.post('/', (req: Request, res: Response) => {
-
+  const { task } = req.body;
+  const userId = req.userId!;
+  const result = insertTodo.run(userId, task);
+  res.json({
+    id: result.lastInsertRowid,
+    task,
+    completed: 0
+  })
 });
 
 // update todo

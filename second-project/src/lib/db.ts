@@ -26,18 +26,18 @@ export const insertUser = db.prepare(`
   VALUES(?, ?);
 `);
 
-export const insertTodo = db.prepare(`
-  INSERT INTO todos(user_id, task)
-  VALUES(?, ?);
-`);
-
 export const getUser = db.prepare(`
   SELECT * FROM users WHERE username = ?  
 `)
-
+  
 // todos queries
 export const getTodos = db.prepare(`
   SELECT * FROM todos WHERE user_id = ? 
 `)
 
+export const insertTodo = db.prepare(`
+  INSERT INTO todos(user_id, task)
+  VALUES(?, ?);
+`);
+    
 export default db;
