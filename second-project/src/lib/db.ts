@@ -43,5 +43,9 @@ export const insertTodo = db.prepare(`
 export const updatedTodo = db.prepare(`
   UPDATE todos SET completed = ? WHERE id = ?;  
 `)
+
+export const deleteTodo = db.prepare(`
+  DELETE from todos WHERE id = ? AND user_id = ?;
+`)
     
 export default db;

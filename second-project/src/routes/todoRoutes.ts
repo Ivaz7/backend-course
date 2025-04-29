@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { 
+  deleteTodo,
   getTodos,
   insertTodo,
   updatedTodo,
@@ -38,7 +39,10 @@ router.put('/:id', (req: Request, res: Response) => {
 
 // delete todo
 router.delete('/:id', (req: Request, res: Response) => {
-  
+  const { id } = req.params;
+  const userId = req.userId!;
+  const result = deleteTodo.run(id, userId);
+  res.send("Todo Deleted")
 })
 
 export default router;
