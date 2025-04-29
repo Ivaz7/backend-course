@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { 
   getTodos,
   insertTodo,
+  updatedTodo,
 } from '../lib/db';
 
 const router = express.Router();
@@ -29,7 +30,10 @@ router.post('/', (req: Request, res: Response) => {
 
 // update todo
 router.put('/:id', (req: Request, res: Response) => {
-
+  const { completed } = req.body;
+  const { id } = req.params;
+  const result = updatedTodo.run(completed, id);
+  res.json({ message: "Todo Completed" })
 });
 
 // delete todo

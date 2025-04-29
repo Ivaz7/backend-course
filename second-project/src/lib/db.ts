@@ -39,5 +39,9 @@ export const insertTodo = db.prepare(`
   INSERT INTO todos(user_id, task)
   VALUES(?, ?);
 `);
+
+export const updatedTodo = db.prepare(`
+  UPDATE todos SET completed = ? WHERE id = ?;  
+`)
     
 export default db;

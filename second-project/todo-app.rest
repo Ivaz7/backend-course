@@ -31,3 +31,12 @@ Content-Type: application/json
 {
   "task": "Finish coding the projects"
 }
+
+### PUT update todos
+PUT http://localHost:5000/todos/2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzQ1ODk2NDc1LCJleHAiOjE3NDU5ODI4NzV9.ZkyRYRSv5Z35zqYReDAbMzQopyseSwvNZdLChtKQumk
+Content-Type: application/json
+
+{
+  "completed": 1
+}
