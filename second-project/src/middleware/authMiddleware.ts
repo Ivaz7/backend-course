@@ -11,13 +11,12 @@ export default function authMiddleware(
   next: NextFunction
 ) {
   // Expect header: Authorization: Bearer <token>
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  const token = req.headers['authorization'];
+  if (!token) {
     res.status(401).json('No token provided');
     return 
   }
 
-  const token = authHeader.split(' ')[1];
   try {
     const jwtKey = process.env.JWT_KEY!;
     const decoded = jwt.verify(token, jwtKey) as JwtPayload;
@@ -25,6 +24,7 @@ export default function authMiddleware(
     req.userId = decoded.id;
     next();
   } catch (err) {
+    console.log(err)
     res.status(401).json('Invalid or expired token');
     return
   }

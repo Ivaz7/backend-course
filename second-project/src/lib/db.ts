@@ -37,7 +37,7 @@ export const getUser = db.prepare(`
 
 // todos queries
 export const getTodos = db.prepare(`
-   SELECT * FROM todos WHERE user_id = ? 
+  SELECT * FROM todos WHERE user_id = ? 
 `)
 
 export default db;
